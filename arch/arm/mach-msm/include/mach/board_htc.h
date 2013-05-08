@@ -127,9 +127,18 @@ enum {
 	RADIO_FLAG_USE_EFS_NV = BIT(31),
 };
 
-/* common init routines for use by arch/arm/mach-msm/board-*.c */
-
-extern int gy_type;
+enum {
+	MFG_MODE_NORMAL,
+	MFG_MODE_FACTORY2,
+	MFG_MODE_RECOVERY,
+	MFG_MODE_CHARGE,
+	MFG_MODE_POWER_TEST,
+	MFG_MODE_OFFMODE_CHARGING,
+	MFG_MODE_MFGKERNEL_DIAG58,
+	MFG_MODE_GIFT_MODE,
+	MFG_MODE_MFGKERNEL,
+	MFG_MODE_MINI,
+};
 
 void __init msm_add_usb_devices(void (*phy_reset) (void));
 void __init msm_add_mem_devices(struct msm_pmem_setting *setting);
@@ -140,15 +149,17 @@ int __init msm_add_sdcc_devices(unsigned int controller, struct mmc_platform_dat
 int __init msm_add_serial_devices(unsigned uart);
 
 #if defined(CONFIG_USB_FUNCTION_MSM_HSUSB)
-/* START: add USB connected notify function */
 struct t_usb_status_notifier{
 	struct list_head notifier_link;
 	const char *name;
 	void (*func)(int online);
 };
-	int usb_register_notifier(struct t_usb_status_notifier *);
+	int htc_usb_register_notifier(struct t_usb_status_notifier *);
 	static LIST_HEAD(g_lh_usb_notifier_list);
-/* END: add USB connected notify function */
+#endif
+
+#ifdef CONFIG_RESET_BY_CABLE_IN
+void reset_dflipflop(void);
 #endif
 
 void __init htc_add_ramconsole_devices(void);
@@ -163,6 +174,5 @@ char *board_serialno(void);
 unsigned long get_kernel_flag(void);
 unsigned int get_radio_flag(void);
 unsigned int get_tamper_sf(void);
-int get_ls_setting(void);
 
 #endif
