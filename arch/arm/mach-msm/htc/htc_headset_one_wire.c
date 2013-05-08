@@ -198,7 +198,7 @@ static int hs_1wire_read_key(void)
 					HS_LOG("Non key data, dropped");
 			}
 		}
-	hr_msleep(50);
+	msleep(50);
 	}
 	return -1;
 }
@@ -237,16 +237,16 @@ static int hs_1wire_init(void)
 		HS_LOG("[HS]Set uart sw = 1");
 	}
 	hi->aid = 0;
-	hr_msleep(20);
+	msleep(20);
 	writeFile(fp,&all_zero,1);
-	hr_msleep(5);
+	msleep(5);
 	writeFile(fp,&send_data,1);
 	HS_LOG("Send 0x00 0xF5");
 	usleep(300);
 	if (hi->pdata.tx_level_shift_en)
 		gpio_set_value_cansleep(hi->pdata.tx_level_shift_en, 1);
 	HS_LOG("[HS]Disable level shift");
-	hr_msleep(22);
+	msleep(22);
 	if (hs_read_aid() == 0) {
 		HS_LOG("[1-wire]Valid AID received, enter 1-wire mode");
 		if (hi->pdata.tx_level_shift_en)
