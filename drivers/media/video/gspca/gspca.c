@@ -1678,7 +1678,7 @@ static int vidioc_streamoff(struct file *file, void *priv,
 	
 	wake_up_interruptible(&gspca_dev->wq);
 
-	
+	/* empty the transfer queues */
 	for (i = 0; i < gspca_dev->nframes; i++)
 		gspca_dev->frame[i].v4l2_buf.flags &= ~BUF_ALL_FLAGS;
 	atomic_set(&gspca_dev->fr_q, 0);
